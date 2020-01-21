@@ -1,0 +1,39 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Blah",
+    "description": "",
+    "version": "1.0"
+  },
+  "produces": ["application/json"],
+  "paths": {
+    "/products": {
+      "get": {
+        "x-swagger-router-controller": "bar",
+        "operationId": "/products",
+        "tags": ["Products"],
+        "description": "Получить все продукты",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "x-swagger-router-controller": "bar",
+        "operationId": "/products/{id}",
+        "tags": ["Products"],
+        "description": "Получить один продукт по ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true,
+            "description": "Получить один продукт по ID"
+          }
+        ],
+        "responses": {}
+      }
+    }
+  }
+}
