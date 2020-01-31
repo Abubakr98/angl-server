@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fse = require('fs-extra');
-const auth = require('../../app/controllers/auth');
+const auth = require('../../app/controllers/user');
 
 const storageConfig = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -39,6 +39,21 @@ router.get(
   '/:id',
   // authMiddleWare,
   auth.getUser,
+);
+router.get(
+  '/:id/groups',
+  // authMiddleWare,
+  auth.getUserGroups,
+);
+router.get(
+  '/:id/words',
+  // authMiddleWare,
+  auth.getUserWords,
+);
+router.post(
+  '/:id',
+  // authMiddleWare,
+  auth.addUserWord,
 );
 router.route('/:id/avatar')
   .get(
