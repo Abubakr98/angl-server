@@ -35,11 +35,15 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storageConfig, fileFilter });
 const router = express.Router();
-router.get(
-  '/:id',
-  // authMiddleWare,
-  auth.getUser,
-);
+router.route('/:id')
+  .get(
+    // authMiddleWare,
+    auth.getUser,
+  )
+  .post(
+    // authMiddleWare,
+    auth.addUserWord,
+  );
 router.get(
   '/:id/groups',
   // authMiddleWare,
@@ -49,11 +53,6 @@ router.get(
   '/:id/words',
   // authMiddleWare,
   auth.getUserWords,
-);
-router.post(
-  '/:id',
-  // authMiddleWare,
-  auth.addUserWord,
 );
 router.route('/:id/avatar')
   .get(

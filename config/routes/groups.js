@@ -12,4 +12,18 @@ router
     // authMiddleWare,
     words.createOne,
   );
+router
+  .route('/:id')
+  .delete(
+    // authMiddleWare,
+    words.removeOne,
+  )
+  .get(
+    // authMiddleWare,
+    words.getById,
+  )
+  .put(
+    // authMiddleWare,
+    words.updateOne,
+  );
 module.exports = router;

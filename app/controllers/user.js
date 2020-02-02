@@ -69,13 +69,30 @@ const unique = (arr) => {
     res(Array.from(new Set(groups)));
   });
 };
-const getUserGroups = async (req, res) => {
+const wordsCountByGroup = (groups, words) => {
+  return new Promise((res, rej) => {
+    const arr = [];
+    groups.map((g) => {
+      let buff = 0;
+      words.map((w) => {
+        if (w.group === g) {
+          buff += 1;
+        }
+      });
+      arr.push({ group: g, words: buff });
+    });
+    res(arr);
+  });
+};
+const getUserGroups = (req, res) => {
   User.findOne({ id: req.params.id })
     .exec()
-    .then((user) => { // сдлать сабсаб документ такакак будет слишком сложно считать все слова чтоб найти все группи юзера
+    .then((user) => {
       const groups = unique(user.words);
       groups.then((ug) => {
-        res.json(ug);
+        const wcbg = wordsCountByGroup(ug, user.words);
+        wcbg.then(data => res.json(data));
+        // res.json(ug);
       });
     })
     .catch(err => res.status(500).json(err));
@@ -83,7 +100,7 @@ const getUserGroups = async (req, res) => {
 const getUserWords = (req, res) => {
   User.findOne({ id: req.params.id })
     .exec()
-    .then((user) => { // сдлать сабсаб документ такакак будет слишком сложно считать все слова чтоб найти все группи юзера
+    .then((user) => {
       Word.find().then((data) => {
         const buff = [];
         user.words.map((el, i) => {

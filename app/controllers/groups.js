@@ -10,7 +10,7 @@ const getAllHelper = (group) => {
       const buff = [];
       group.map((el) => {
         let count = 0;
-        words.map((word, i) => {
+        words.map((word) => {
           if (word.group === el._id) {
             count += 1;
           }
@@ -47,24 +47,26 @@ const getAllJSon = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
-// const getById = (req, res) => {
-//   Product.findOne({ product_id: +req.params.id })
-//     .exec()
-//     .then((products) => {
-//       res.status(200).json(products);
-//     })
-//     .catch(err => res.status(500).json(err));
-// };
-// const updateOne = (req, res) => {
-//   Product.findOneAndUpdate({ product_id: +req.params.id }, req.body, { new: true })
-//     .exec()
-//     .then((product) => {
-//       res.status(201).json(product);
-//     })
-//     .catch(err => res.status(500).json(err));
-// };
+const getById = (req, res) => {
+  Group.findById({ _id: req.params.id })
+    .exec()
+    .then((group) => {
+      res.status(200).json(group);
+    })
+    .catch(err => res.status(500).json(err));
+};
+const updateOne = (req, res) => {
+  delete req.body.id;
+  delete req.body.__v;
+  Group.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+    .exec()
+    .then((group) => {
+      res.status(201).json(group);
+    })
+    .catch(err => res.status(500).json(err));
+};
 const removeOne = (req, res) => {
-  Group.deleteOne({ id: +req.params.id })
+  Group.findOneAndRemove({ _id: req.params.id })
     .exec()
     .then((group) => {
       res.json(group);
@@ -89,8 +91,8 @@ const createOne = (req, res) => {
 module.exports = {
   createOne,
   removeOne,
-  // updateOne,
-  // getById,
+  updateOne,
+  getById,
   getAllJSon,
   getAll,
 };

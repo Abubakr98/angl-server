@@ -19,6 +19,7 @@ const WordSchema = new mongoose.Schema({
   },
   group: {
     type: String,
+    default: 'Інше',
     required: true,
   },
 });

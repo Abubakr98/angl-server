@@ -6,7 +6,7 @@ router
   .route('/')
   .get(
     // authMiddleWare,
-    words.getAllJSon,
+    words.getAll,
   )
   .post(
     // authMiddleWare,
@@ -18,14 +18,14 @@ router
     // authMiddleWare,
     words.getByGroup,
   );
-// router
-//   .route('/:id')
-//   .put(
-//     // authMiddleWare,
-//     words.updateOne,
-//   )
-//   .delete(
-//     // authMiddleWare,
-//     words.removeOne,
-//   );
+router
+  .route('/:id')
+  .put(
+    // authMiddleWare,
+    words.updateOne,
+  )
+  .delete(
+    // authMiddleWare,
+    words.removeOne,
+  );
 module.exports = router;
