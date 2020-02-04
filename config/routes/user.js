@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fse = require('fs-extra');
 const auth = require('../../app/controllers/user');
+const authMiddleWare = require('../../middleware/auth');
 
 const storageConfig = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -77,7 +78,7 @@ router.get(
 
 router.get(
   '/',
-  // authMiddleWare,
+  authMiddleWare,
   auth.getAllUsers,
 );
 

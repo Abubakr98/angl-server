@@ -1,11 +1,12 @@
 const express = require('express');
 const words = require('../../app/controllers/groups');
+const authMiddleWare = require('../../middleware/auth');
 
 const router = express.Router();
 router
   .route('/')
   .get(
-    // authMiddleWare,
+    authMiddleWare,
     words.getAll,
   )
   .post(
