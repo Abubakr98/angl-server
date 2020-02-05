@@ -16,6 +16,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  tokenRefreshPassword: {
+    type: String,
+  },
   words: [userWordsSchema],
 });
 const options = {

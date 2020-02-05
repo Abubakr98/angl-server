@@ -2,8 +2,10 @@ const mongoose = require('mongoose');
 // const bCrypt = require("bcrypt");
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 const authHelper = require('../helpers/authHelper');
 const { jwtSecret } = require('../../config/app').jwt;
+const config = require('../../config/email.json');
 
 const User = mongoose.model('User');
 const Token = mongoose.model('Token');
@@ -86,6 +88,68 @@ const registration = (req, res) => {
     .catch(err => res.status(500).json({ message: err.message }));
 };
 
+const refreshPass = (req, res) => {
+  const { email, password } = req.body;
+  User.findOne({ email })
+    .exec()
+    .then((user) => {
+      if (user !== null) {
+        crypto.scrypt(password, jwtSecret, 64, (err, hash) => {
+          if (err === null) {
+            User.findOneAndUpdate({ email }, { password: hash.toString('hex') })
+              .then(refreshedUser => res.status(200).json(refreshedUser))
+              .catch(error => res.status(500).json(error));
+          } else {
+            res.status(500).json(err);
+          }
+        });
+      } else {
+        res.status(401).json({ message: 'User with this email dosen`t exist!' });
+      }
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
+};
+const sendMail = (req, res, token) => {
+  const { email } = req.body;
+  const transporter = nodemailer.createTransport(config.mail.smtp);
+  const mailOptions = {
+    from: config.mail.smtp.auth.user,
+    to: email,
+    subject: config.mail.subject,
+    html:
+      `<div>
+      <div>token: <span style="color:#494ee0">${token}<span/></div>
+      <div>Отправлено с: ${config.mail.smtp.auth.user}</div>
+      </div>`,
+  };
+  // отправляем почту
+  transporter.sendMail(mailOptions, (error, info) => {
+    // если есть ошибки при отправке - сообщаем об этом
+    if (error) {
+      return res.json({ msg: `При отправке письма произошла ошибка!: ${error}`, status: 'Error' });
+    }
+    res.json({ msg: 'Письмо успешно отправлено!', status: 'Ok', token });
+  });
+};
+const tokenForRefreshPass = (req, res) => {
+  const { email } = req.body;
+  User.findOne({ email })
+    .exec()
+    .then((user) => {
+      if (user !== null) {
+        const token = authHelper.generateAccessToken(email);
+        User.findOneAndUpdate({ email }, { tokenRefreshPassword: token }, { new: true })
+          .exec()
+          .then(() => {
+            sendMail(req, res, token);
+          }).catch(err => res.status(500).json({ message: err.message }));
+      } else {
+        res.status(401).json({ message: 'User with this email dosen`t exist!' });
+      }
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
+};
+
 const refreshTokens = (req, res) => {
   const { refreshToken } = req.body;
   let payload;
@@ -118,4 +182,6 @@ module.exports = {
   signIn,
   refreshTokens,
   registration,
+  refreshPass,
+  tokenForRefreshPass,
 };

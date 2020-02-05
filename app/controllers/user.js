@@ -63,6 +63,14 @@ const getUser = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
+// const refreshPass = (req, res) => {
+//   User.findOne({ email: req.params.email })
+//     .exec()
+//     .then((user) => {
+//       res.json(user);
+//     })
+//     .catch(err => res.status(500).json(err));
+// };
 const unique = (arr) => {
   return new Promise((res, rej) => {
     const groups = arr.map(el => el.group);
@@ -163,4 +171,5 @@ module.exports = {
   addUserWord,
   getUserGroups,
   getUserWords,
+  // refreshPass,
 };

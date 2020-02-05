@@ -81,5 +81,10 @@ router.get(
   authMiddleWare,
   auth.getAllUsers,
 );
+// router.post(
+//   '/',
+//   // authMiddleWare,
+//   auth.refreshPass,
+// );
 
 module.exports = router;
