@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 const authHelper = require('../helpers/authHelper');
 const { jwtSecret } = require('../../config/app').jwt;
 const config = require('../../config/email.json');
+const FURL = require('../../config/front-urls');
 
 const User = mongoose.model('User');
 const Token = mongoose.model('Token');
@@ -89,14 +90,15 @@ const registration = (req, res) => {
 };
 
 const refreshPass = (req, res) => {
-  const { email, password } = req.body;
-  User.findOne({ email })
+  const { password } = req.body;
+  const { token } = req.params;
+  User.findOne({ tokenRefreshPassword: token })
     .exec()
     .then((user) => {
       if (user !== null) {
         crypto.scrypt(password, jwtSecret, 64, (err, hash) => {
           if (err === null) {
-            User.findOneAndUpdate({ email }, { password: hash.toString('hex') })
+            User.findOneAndUpdate({ tokenRefreshPassword: token }, { password: hash.toString('hex'), tokenRefreshPassword: '' })
               .then(refreshedUser => res.status(200).json(refreshedUser))
               .catch(error => res.status(500).json(error));
           } else {
@@ -104,7 +106,7 @@ const refreshPass = (req, res) => {
           }
         });
       } else {
-        res.status(401).json({ message: 'User with this email dosen`t exist!' });
+        res.status(401).json({ message: 'Спроба скидання паролю вичерпана, спробуйте скидати пароль з самого початку ще раз' });
       }
     })
     .catch(err => res.status(500).json({ message: err.message }));
@@ -118,7 +120,7 @@ const sendMail = (req, res, token) => {
     subject: config.mail.subject,
     html:
       `<div>
-      <div>token: <span style="color:#494ee0">${token}<span/></div>
+      <div>token: <a href="${FURL.base + FURL.remindPassword + token}" style="color:#494ee0">Скинути пароль<a/></div>
       <div>Отправлено с: ${config.mail.smtp.auth.user}</div>
       </div>`,
   };
@@ -126,9 +128,9 @@ const sendMail = (req, res, token) => {
   transporter.sendMail(mailOptions, (error, info) => {
     // если есть ошибки при отправке - сообщаем об этом
     if (error) {
-      return res.json({ msg: `При отправке письма произошла ошибка!: ${error}`, status: 'Error' });
+      return res.status(500).json({ message: `При отправке письма произошла ошибка!: ${error}`, status: 'Error' });
     }
-    res.json({ msg: 'Письмо успешно отправлено!', status: 'Ok', token });
+    res.status(200).json({ message: 'Письмо успешно отправлено!', status: 'Ok', token });
   });
 };
 const tokenForRefreshPass = (req, res) => {
