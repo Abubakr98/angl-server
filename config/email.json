@@ -10,6 +10,7 @@
       },
       "requireTLS": true,
       "auth": {
+        "name": "Abubakr Fazilov",
         "user": "abubakrfazilov1998@gmail.com",
         "pass": "abubakr98"
       }
