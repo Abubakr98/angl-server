@@ -4,7 +4,7 @@
     "smtp": {
       "service": "Gmail",
       "host": "smtp.gmail.com",
-      "secureConnection": true,
+      "secure": true,
       "port": 465,
       "auth": {
         "user": "abubakrfazilov1998@gmail.com",
