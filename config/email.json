@@ -3,6 +3,7 @@
     "subject": "Сообщение с LernWords на востановление пароля",
     "smtp": {
       "service": "Gmail",
+      "type": "SMTP",
       "host": "smtp.gmail.com",
       "secure": true,
       "port": 465,
