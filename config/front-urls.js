@@ -1,4 +1,4 @@
 module.exports = {
-  base: 'http://localhost:3001/',
+  base: process.env.BASE || 'http://localhost:3001/',
   remindPassword: 'refresh-password/',
 };
