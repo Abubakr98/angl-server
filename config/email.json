@@ -2,15 +2,10 @@
   "mail": {
     "subject": "Сообщение с LernWords на востановление пароля",
     "smtp": {
-      "host": "imap.gmail.com",
+      "host": "smtp.gmail.com",
       "secureConnection": true,
       "port": 465,
-      "tls": {
-        "rejectUnauthorized": false
-      },
-      "requireTLS": true,
       "auth": {
-        "name": "Abubakr Fazilov",
         "user": "abubakrfazilov1998@gmail.com",
         "pass": "abubakr98"
       }
