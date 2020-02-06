@@ -3,8 +3,12 @@
     "subject": "Сообщение с LernWords на востановление пароля",
     "smtp": {
       "host": "smtp.gmail.com",
-      "port": 465,
-      "secure": true,
+      "secureConnection": false,
+      "port": 587,
+      "tls": {
+        "ciphers": "SSLv3"
+      },
+      "requireTLS": true, 
       "auth": {
         "user": "abubakrfazilov1998@gmail.com",
         "pass": "abubakr98"
