@@ -46,7 +46,13 @@ const signIn = (req, res) => {
         comparePass(password, user.password).then((passMatch) => {
           if (passMatch) {
             updateTokens(user._id)
-              .then(tokens => res.json({ ...tokens, userId: user._id, userEmail: user.email }));
+              .then(tokens => res.json({
+                ...tokens,
+                userId: user._id,
+                userEmail: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+              }));
           } else {
             res.status(401).json({ message: 'Invalid credentials!' });
           }
@@ -68,14 +74,18 @@ const signIn = (req, res) => {
 };
 
 const registration = (req, res) => {
-  const { email, password } = req.body;
+  const {
+    firstName, lastName, email, password,
+  } = req.body;
   User.findOne({ email })
     .exec()
     .then((user) => {
       if (user === null) {
         crypto.scrypt(password, jwtSecret, 64, (err, hash) => {
           if (err === null) {
-            User.create({ email, password: hash.toString('hex') })
+            User.create({
+              firstName, lastName, email, password: hash.toString('hex'),
+            })
               .then(createdUser => res.json(createdUser))
               .catch(error => res.status(500).json(error));
           } else {
