@@ -101,14 +101,15 @@ const registration = (req, res) => {
 
 const refreshPass = (req, res) => {
   const { password } = req.body;
-  const { token } = req.params;
-  User.findOne({ tokenRefreshPassword: token })
+  const { tokenPasswordReset } = req.params;
+
+  User.findOne({ tokenRefreshPassword: tokenPasswordReset })
     .exec()
     .then((user) => {
       if (user !== null) {
         crypto.scrypt(password, jwtSecret, 64, (err, hash) => {
           if (err === null) {
-            User.findOneAndUpdate({ tokenRefreshPassword: token }, { password: hash.toString('hex'), tokenRefreshPassword: '' })
+            User.findOneAndUpdate({ tokenRefreshPassword: tokenPasswordReset }, { password: hash.toString('hex'), tokenRefreshPassword: '' })//
               .then(refreshedUser => res.status(200).json(refreshedUser))
               .catch(error => res.status(500).json(error));
           } else {
