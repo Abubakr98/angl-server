@@ -16,7 +16,7 @@ const options = {
 
 console.log(`Початок ініціалізації роботи: ${new Date().toLocaleString('ru', options)}\n`);
 
-const job = new CronJob('56 10 * * *', (() => { //* /1 * * * *
+const job = new CronJob('0 23 * * *', (() => { //* /1 * * * *
   CronLogger(`Робота почалась: ${new Date().toLocaleString('ru', options)}\n`);
   UserRemover();
   CronLogger(`Робота закінчалась: ${new Date().toLocaleString('ru', options)}\n`);

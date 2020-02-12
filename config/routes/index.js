@@ -9,12 +9,12 @@ const { pageNotFound } = require('../../app/controllers/products');
 const router = express.Router();
 // const authMiddleWare = require('../middleware/auth');
 router.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', 'https://hardcore-bardeen-e9d1bf.netlify.com, https://angl-front.herokuapp.com/');
   res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
+    return res.sendStatus(204);
   }
   next();
 });
