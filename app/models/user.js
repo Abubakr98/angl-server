@@ -27,6 +27,14 @@ const UserSchema = new mongoose.Schema({
   tokenRefreshPassword: {
     type: String,
   },
+  tokenVerifyEmail: {
+    type: String,
+  },
+  emailVerified: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
   words: [userWordsSchema],
 });
 const options = {

@@ -6,7 +6,9 @@ const fs = require('fs');
 const path = require('path');
 const swaggerDocument = require('./swagger.json');
 // const bodyParser = require('body-parser');
+
 require('./app/models');
+require('./cron/revomeNotVerifiedUsers');
 const config = require('./config');
 
 const app = express();

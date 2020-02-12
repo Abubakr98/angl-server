@@ -37,12 +37,13 @@ const comparePass = (pass, userPass) => {
 
 const signIn = (req, res) => {
   const { email, password } = req.body;
+
   User.findOne({ email })
     .exec()
     .then((user) => {
       if (!user) {
         res.status(401).json({ message: 'User does not exist!' });
-      } else {
+      } else if (user.emailVerified) {
         comparePass(password, user.password).then((passMatch) => {
           if (passMatch) {
             updateTokens(user._id)
@@ -59,18 +60,61 @@ const signIn = (req, res) => {
         }).catch((err) => {
           res.status(500).json({ message: err.message });
         });
-
-        // crypto.scrypt(password, jwtSecret, 64, (err, dk) => {
-        //   if (user.password === dk.toString('hex')) {
-        //     updateTokens(user._id)
-        //       .then(tokens => res.json({ ...tokens, userId: user._id, userEmail: user.email }));
-        //   } else {
-        //     res.status(208).json({ message: 'Invalid credentials!' });
-        //   }
-        // });
+      } else {
+        res.status(401).json({ message: 'User email does not verified!' });
       }
     })
     .catch(err => res.status(500).json({ message: err.message }));
+};
+const emailVerify = (req, res) => {
+  const { tokenEmailVerify } = req.params;
+
+  User.findOne({ tokenVerifyEmail: tokenEmailVerify })
+    .exec()
+    .then((user) => {
+      if (user !== null) {
+        User.findOneAndUpdate({ tokenVerifyEmail: tokenEmailVerify }, { emailVerified: true, tokenVerifyEmail: '' }, { new: true })
+          .then(refreshedUser => res.status(200).json(refreshedUser))
+          .catch(error => res.status(500).json(error));
+      } else {
+        res.status(401).json({ message: 'Спроба скидання паролю вичерпана, спробуйте скидати пароль з самого початку ще раз' });
+      }
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
+};
+const sendEmailEmailVerify = (req, res, token) => {
+  const { email } = req.body;
+  const transporter = nodemailer.createTransport(config.mail.smtp);
+  const mailOptions = {
+    from: config.mail.smtp.auth.user,
+    to: email,
+    subject: config.mail.subjectVerifyEmail,
+    html:
+      `<table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+          <div>
+            <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${FURL.base + FURL.emailVerify + token}" style="height:36px;v-text-anchor:middle;width:150px;" arcsize="5%" strokecolor="#EB7035" fillcolor="#EB7035">
+                <w:anchorlock/>
+                <center style="color:#ffffff;font-family:Helvetica, Arial,sans-serif;font-size:16px;">Підтвердити пошту &rarr;</center>
+              </v:roundrect>
+            <![endif]-->
+            <a href="${FURL.base + FURL.emailVerify + token}" style="background-color:#EB7035;border:1px solid #EB7035;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;line-height:44px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">Підтвердити пошту &rarr;</a>
+          </div>
+        </td>
+      </tr>
+    </table>
+      `,
+  };
+  // отправляем почту
+  transporter.sendMail(mailOptions, (error, info) => {
+    // если есть ошибки при отправке - сообщаем об этом
+    if (error) {
+      return res.status(500).json({ message: `При отправке письма произошла ошибка!: ${error}`, status: 'Error' });
+    }
+    res.status(200).json({ message: 'Письмо успешно отправлено!', status: 'Ok', token });
+  });
 };
 
 const registration = (req, res) => {
@@ -83,10 +127,18 @@ const registration = (req, res) => {
       if (user === null) {
         crypto.scrypt(password, jwtSecret, 64, (err, hash) => {
           if (err === null) {
+            const token = authHelper.generateAccessToken(email);
             User.create({
-              firstName, lastName, email, password: hash.toString('hex'),
+              firstName,
+              lastName,
+              email,
+              password: hash.toString('hex'),
+              tokenVerifyEmail: token,
             })
-              .then(createdUser => res.json(createdUser))
+              .then((createdUser) => {
+                sendEmailEmailVerify(req, res, token);
+                res.json(createdUser);
+              })
               .catch(error => res.status(500).json(error));
           } else {
             res.status(500).json(err);
@@ -130,10 +182,22 @@ const sendMail = (req, res, token) => {
     to: email,
     subject: config.mail.subject,
     html:
-      `<div>
-      <div>token: <a href="${FURL.base + FURL.remindPassword + token}" style="color:#494ee0">Скинути пароль<a/></div>
-      <div>Отправлено с: ${config.mail.smtp.auth.user}</div>
-      </div>`,
+      `<table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+          <div>
+            <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${FURL.base + FURL.remindPassword + token}" style="height:36px;v-text-anchor:middle;width:150px;" arcsize="5%" strokecolor="#EB7035" fillcolor="#EB7035">
+                <w:anchorlock/>
+                <center style="color:#ffffff;font-family:Helvetica, Arial,sans-serif;font-size:16px;">Скинути пароль &rarr;</center>
+              </v:roundrect>
+            <![endif]-->
+            <a href="${FURL.base + FURL.remindPassword + token}" style="background-color:#EB7035;border:1px solid #EB7035;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;line-height:44px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">Скинути пароль &rarr;</a>
+          </div>
+        </td>
+      </tr>
+    </table>
+      `,
   };
   // отправляем почту
   transporter.sendMail(mailOptions, (error, info) => {
@@ -197,4 +261,5 @@ module.exports = {
   registration,
   refreshPass,
   tokenForRefreshPass,
+  emailVerify,
 };

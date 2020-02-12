@@ -1,6 +1,7 @@
 {
   "mail": {
     "subject": "Сообщение с LernWords на востановление пароля",
+    "subjectVerifyEmail": "Сообщение с LernWords на подтверждение почты",
     "smtp": {
       "host": "smtp.gmail.com",
       "port": 465,

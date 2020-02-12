@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config/app').jwt;
 
 module.exports = (req, res, next) => {
-  const authHeader = req.params.tokenPasswordReset || req.get('Authorization');
+  const authHeader = req.params.tokenPasswordReset || req.params.tokenEmailVerify || req.get('Authorization');
   if (!authHeader) {
     res.status(401).json({ message: 'Token not provided!' });
     return;

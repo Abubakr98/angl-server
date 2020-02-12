@@ -13,3 +13,16 @@
     </td>
   </tr>
 </table>
+
+
+<div>
+      <div>token: <a href="${FURL.base + FURL.remindPassword + token}" style="color:#494ee0">Скинути пароль<a/></div>
+      <div>Отправлено с: ${config.mail.smtp.auth.user}</div>
+      </div>
+
+
+
+      <div>
+      <div>token: <a href="${FURL.base + FURL.emailVerify + token}" style="color:#494ee0">Активувати обліковий запис<a/></div>
+      <div>Отправлено с: ${config.mail.smtp.auth.user}</div>
+      </div>
