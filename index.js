@@ -40,7 +40,7 @@ mongoose.connect(mongoUri, {
 })
   .then(() => {
     app.listen(appPort, () => {
-      console.log('server is running on port 3000...');
+      console.log(`server is running on port ${appPort}...`);
     });
   })
   .catch(err => console.error(`Error connection to mongodb: ${mongoUri}`, err));
