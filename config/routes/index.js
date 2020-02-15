@@ -9,7 +9,7 @@ const { pageNotFound } = require('../../app/controllers/products');
 const router = express.Router();
 // const authMiddleWare = require('../middleware/auth');
 router.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', process.env.REACT_APP_FRONT || '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
