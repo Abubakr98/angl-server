@@ -27,12 +27,10 @@ app.use(logger('combined', {
 
 config.express(app);
 
-// config.routes(app);
-app.use((req, res, next) => {
+app.use((req, res, next) => { // это перенес из config\routes\index.js
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
