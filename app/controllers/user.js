@@ -119,6 +119,23 @@ const getUserWords = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
+const getByGroupForStudy = (req, res) => {
+  const { id } = req.body;
+  Word.find({ group: req.params.group })
+    .exec()
+    .then((words) => {
+      User.findOne({ id })
+        .exec()
+        .then((user) => {
+          const buff = [];
+          user.words.map((el, i) => {
+            buff.push(words.find(word => word.id === el.id));
+          });
+          res.status(200).json(buff);
+        });
+    })
+    .catch(err => res.status(500).json(err));
+};
 const getAllUsers = (req, res) => {
   User.find()
     .exec()
@@ -171,5 +188,5 @@ module.exports = {
   addUserWord,
   getUserGroups,
   getUserWords,
-  // refreshPass,
+  getByGroupForStudy, // Здесь закончил
 };

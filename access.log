@@ -466,3 +466,4 @@
 ::1 - - [15/Feb/2020:16:43:01 +0000] "POST /api/v1.0/auth/signin HTTP/1.1" 401 34 "http://localhost:3001/sign-in" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 Safari/537.36"
 ::1 - - [15/Feb/2020:16:43:03 +0000] "POST /api/v1.0/auth/signin HTTP/1.1" 401 34 "http://localhost:3001/sign-in" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 Safari/537.36"
 ::1 - - [15/Feb/2020:16:44:25 +0000] "POST /api/v1.0/auth/signin HTTP/1.1" 401 34 "http://192.168.0.50:3001/sign-in" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.106 Safari/537.36"
+::1 - - [17/Feb/2020:08:19:29 +0000] "GET /api/v1.0/groups HTTP/1.1" 401 28 "-" "PostmanRuntime/7.22.0"
