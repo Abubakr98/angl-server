@@ -17,7 +17,6 @@ const getByGroup = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
-
 const updateOne = (req, res) => {
   delete req.body._id;
   delete req.body.__v;

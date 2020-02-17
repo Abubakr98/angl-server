@@ -54,7 +54,6 @@ const getUserAvatarUrl = (req, res) => {
     res.json({ userId: 'tobi', avatar });
   });
 };
-
 const getUser = (req, res) => {
   User.findOne({ id: req.params.id })
     .exec()
@@ -63,14 +62,6 @@ const getUser = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
-// const refreshPass = (req, res) => {
-//   User.findOne({ email: req.params.email })
-//     .exec()
-//     .then((user) => {
-//       res.json(user);
-//     })
-//     .catch(err => res.status(500).json(err));
-// };
 const unique = (arr) => {
   return new Promise((res, rej) => {
     const groups = arr.map(el => el.group);
@@ -109,27 +100,29 @@ const getUserWords = (req, res) => {
   User.findOne({ id: req.params.id })
     .exec()
     .then((user) => {
-      Word.find().then((data) => {
+      Word.find().then((words) => {
         const buff = [];
         user.words.map((el, i) => {
-          buff.push(data.find(word => word.id === el.id));
+          buff.push(words.find(word => word.id === el.id));
         });
         res.json(buff);
       });
     })
     .catch(err => res.status(500).json(err));
 };
-const getByGroupForStudy = (req, res) => {
-  const { id } = req.body;
-  Word.find({ group: req.params.group })
+const learningWords = (req, res) => {
+  const { id, group } = req.params;
+  Word.find({ group })
     .exec()
     .then((words) => {
       User.findOne({ id })
         .exec()
         .then((user) => {
           const buff = [];
-          user.words.map((el, i) => {
-            buff.push(words.find(word => word.id === el.id));
+          words.map((el, i) => {
+            if (user.words.id(el._id) === null) {
+              buff.push(el);
+            }
           });
           res.status(200).json(buff);
         });
@@ -144,7 +137,6 @@ const getAllUsers = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
-
 const addUserWord = (req, res) => {
   const wordId = req.body.id;
 
@@ -188,5 +180,5 @@ module.exports = {
   addUserWord,
   getUserGroups,
   getUserWords,
-  getByGroupForStudy, // Здесь закончил
+  learningWords,
 };

@@ -25,9 +25,11 @@ const storageConfig = multer.diskStorage({
   },
 });
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'image/png'
-  || file.mimetype === 'image/jpg'
-  || file.mimetype === 'image/jpeg') {
+  if (
+    file.mimetype === 'image/png'
+    || file.mimetype === 'image/jpg'
+    || file.mimetype === 'image/jpeg'
+  ) {
     cb(null, true);
   } else {
     cb(null, false);
@@ -36,32 +38,36 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storageConfig, fileFilter });
 const router = express.Router();
-router.route('/:id')
-  .get(
-    // authMiddleWare,
-    auth.getUser,
-  )
-  .post(
-    // authMiddleWare,
-    auth.addUserWord,
-  );
+router.route('/:id').get(
+  // authMiddleWare,
+  auth.getUser,
+);
+
 router.get(
   '/:id/groups',
   // authMiddleWare,
   auth.getUserGroups,
 );
-router.get(
-  '/:id/words',
+router.route('/:id/study/:group').get(
+  // authMiddleWare,
+  auth.learningWords,
+);
+router.route('/:id/study').post(
+  // authMiddleWare,
+  auth.addUserWord,
+);
+router.route('/:id/words').get(
   // authMiddleWare,
   auth.getUserWords,
 );
-router.route('/:id/avatar')
+router
+  .route('/:id/avatar')
   .get(
     // authMiddleWare,
     auth.downloadFile,
   )
   .post(
-  // authMiddleWare,
+    // authMiddleWare,
     upload.single('filedata'),
     auth.uploadFile,
   );
@@ -76,15 +82,6 @@ router.get(
   auth.getUserAvatarUrl,
 );
 
-router.get(
-  '/',
-  authMiddleWare,
-  auth.getAllUsers,
-);
-// router.post(
-//   '/',
-//   // authMiddleWare,
-//   auth.refreshPass,
-// );
+router.get('/', authMiddleWare, auth.getAllUsers);
 
 module.exports = router;
