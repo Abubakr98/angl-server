@@ -48,18 +48,21 @@ router.get(
   // authMiddleWare,
   auth.getUserGroups,
 );
-router.route('/:id/study/:group').get(
+router.route('/:id/study/:group')
+  .get(
   // authMiddleWare,
-  auth.learningWords,
-);
-router.route('/:id/study').post(
+    auth.learningWords,
+  );
+router.route('/:id/study')
+  .post(
   // authMiddleWare,
-  auth.addUserWord,
-);
-router.route('/:id/words').get(
+    auth.addUserWord,
+  );
+router.route('/:id/words')
+  .get(
   // authMiddleWare,
-  auth.getUserWords,
-);
+    auth.getUserWords,
+  );
 router
   .route('/:id/avatar')
   .get(

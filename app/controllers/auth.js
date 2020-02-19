@@ -21,8 +21,6 @@ const updateTokens = (userId) => {
     refreshToken: refreshToken.token,
   }));
 };
-
-
 const comparePass = (pass, userPass) => {
   return new Promise((res) => {
     crypto.scrypt(pass, jwtSecret, 64, (err, dk) => {
@@ -34,10 +32,8 @@ const comparePass = (pass, userPass) => {
     });
   });
 };
-
 const signIn = (req, res) => {
   const { email, password } = req.body;
-
   User.findOne({ email })
     .exec()
     .then((user) => {
@@ -50,6 +46,7 @@ const signIn = (req, res) => {
               .then(tokens => res.json({
                 ...tokens,
                 userId: user._id,
+                id: user.id,
                 userEmail: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,
@@ -116,7 +113,6 @@ const sendEmailEmailVerify = (req, res, token) => {
     res.status(200).json({ message: 'Письмо успешно отправлено!', status: 'Ok', token });
   });
 };
-
 const registration = (req, res) => {
   const {
     firstName, lastName, email, password,
@@ -150,7 +146,6 @@ const registration = (req, res) => {
     })
     .catch(err => res.status(500).json({ message: err.message }));
 };
-
 const refreshPass = (req, res) => {
   const { password } = req.body;
   const { tokenPasswordReset } = req.params;
@@ -226,7 +221,6 @@ const tokenForRefreshPass = (req, res) => {
     })
     .catch(err => res.status(500).json({ message: err.message }));
 };
-
 const refreshTokens = (req, res) => {
   const { refreshToken } = req.body;
   let payload;

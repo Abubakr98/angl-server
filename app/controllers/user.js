@@ -111,6 +111,7 @@ const getUserWords = (req, res) => {
     .catch(err => res.status(500).json(err));
 };
 const learningWords = (req, res) => {
+  const { limit } = req.query;
   const { id, group } = req.params;
   Word.find({ group })
     .exec()
@@ -124,7 +125,7 @@ const learningWords = (req, res) => {
               buff.push(el);
             }
           });
-          res.status(200).json(buff);
+          res.status(200).json(buff.slice(0, limit));
         });
     })
     .catch(err => res.status(500).json(err));
