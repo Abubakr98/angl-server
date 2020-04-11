@@ -6,7 +6,7 @@ const router = express.Router();
 router
   .route('/')
   .get(
-    authMiddleWare,
+    // authMiddleWare,
     words.getAll,
   )
   .post(

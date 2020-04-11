@@ -1,7 +1,6 @@
 const express = require('express');
 const auth = require('./auth');
 const user = require('./user');
-const products = require('./products');
 const words = require('./words');
 const groups = require('./groups');
 const { pageNotFound } = require('../../app/controllers/products');
@@ -12,7 +11,6 @@ const router = express.Router();
 
 router.use('/auth', auth);
 router.use('/users', user);
-router.use('/products', products);
 router.use('/groups', groups);
 router.use('/words', words);
 router.all('*', pageNotFound);

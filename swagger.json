@@ -1,38 +1,42 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Blah",
+    "title": "LernWords API",
     "description": "",
     "version": "1.0"
   },
   "produces": ["application/json"],
   "paths": {
-    "/products": {
+    "/api/v1.0/words": {
       "get": {
         "x-swagger-router-controller": "bar",
-        "operationId": "/products",
-        "tags": ["Products"],
-        "description": "Получить все продукты",
-        "parameters": [],
-        "responses": {}
+        "operationId": "/api/v1.0/words",
+        "summary": "Отримати всі слова",
+        "tags": ["Words"],
+        "description": "Отримати всі слова",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
-    "/products/{id}": {
+    "/api/v1.0/words/{top100slivstarter}": {
       "get": {
         "x-swagger-router-controller": "bar",
-        "operationId": "/products/{id}",
-        "tags": ["Products"],
-        "description": "Получить один продукт по ID",
+        "operationId": "/api/v1.0/words/{top100slivstarter}",
+        "summary": "Отримати слово за групою",
+        "tags": ["Words"],
+        "description": "отримати одне слово за групою",
         "parameters": [
           {
             "in": "path",
-            "name": "id",
-            "type": "integer",
+            "name": "top100slivstarter",
+            "type": "string",
             "required": true,
-            "description": "Получить один продукт по ID"
+            "description": "отримати одне слово за групою"
           }
-        ],
-        "responses": {}
+        ]
       }
     }
   }

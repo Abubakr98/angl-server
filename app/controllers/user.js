@@ -159,7 +159,6 @@ const addUserWord = (req, res) => {
             });
             user.save((err) => {
               if (err) return handleError(err);
-              console.log('Success!');
             });
             res.json(user);
           } else {
