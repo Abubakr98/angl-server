@@ -1,5 +1,5 @@
 const express = require('express');
-const words = require('../../app/controllers/groups');
+const groups = require('../../app/controllers/groups');
 const authMiddleWare = require('../../middleware/auth');
 
 const router = express.Router();
@@ -7,24 +7,25 @@ router
   .route('/')
   .get(
     // authMiddleWare,
-    words.getAll,
+    groups.getAll,
   )
   .post(
     // authMiddleWare,
-    words.createOne,
+    groups.createOne,
+  )
+  .delete(
+    // authMiddleWare,
+    groups.removeOne,
   );
 router
   .route('/:id')
-  .delete(
-    // authMiddleWare,
-    words.removeOne,
-  )
+
   .get(
     // authMiddleWare,
-    words.getById,
+    groups.getById,
   )
   .put(
     // authMiddleWare,
-    words.updateOne,
+    groups.updateOne,
   );
 module.exports = router;

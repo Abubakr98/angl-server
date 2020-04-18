@@ -494,3 +494,8 @@
 ::1 - - [11/Apr/2020:08:32:23 +0000] "GET /api/v1.0/groups1 HTTP/1.1" 404 43 "-" "PostmanRuntime/7.23.0"
 ::1 - - [11/Apr/2020:08:32:29 +0000] "GET /api/v1.0/ HTTP/1.1" 404 43 "-" "PostmanRuntime/7.23.0"
 ::1 - - [11/Apr/2020:08:32:59 +0000] "GET /api/v1.0/products HTTP/1.1" 404 43 "-" "PostmanRuntime/7.23.0"
+::1 - - [12/Apr/2020:19:56:06 +0000] "DELETE /api/v1.0/words HTTP/1.1" 404 43 "http://localhost:3001/admin-panel/words" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"
+::1 - - [12/Apr/2020:19:56:24 +0000] "DELETE /api/v1.0/words HTTP/1.1" 404 43 "http://localhost:3001/admin-panel/words" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"
+::1 - - [13/Apr/2020:08:32:14 +0000] "GET /uploads/5e0fb0435e40de3a5c2bee45/5e0fb0435e40de3a5c2bee45_avatar.png HTTP/1.1" 404 207 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"
+::1 - - [13/Apr/2020:18:36:42 +0000] "POST /api/v1.0/words/127 HTTP/1.1" 404 43 "http://localhost:3001/admin-panel/words" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"
+::1 - - [17/Apr/2020:08:34:50 +0000] "PUT /api/v1.0/groups/26 HTTP/1.1" 500 328 "http://localhost:3001/admin-panel/groups" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36"

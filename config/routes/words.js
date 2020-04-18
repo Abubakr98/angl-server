@@ -11,6 +11,9 @@ router
   .post(
     // authMiddleWare,
     words.createOne,
+  ).delete(
+    // authMiddleWare,
+    words.removeMany,
   );
 router
   .route('/:group')
@@ -23,9 +26,5 @@ router
   .put(
     // authMiddleWare,
     words.updateOne,
-  )
-  .delete(
-    // authMiddleWare,
-    words.removeOne,
   );
 module.exports = router;

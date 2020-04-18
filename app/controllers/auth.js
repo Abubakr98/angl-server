@@ -247,7 +247,9 @@ const refreshTokens = (req, res) => {
     .then(tokens => res.json(tokens))
     .catch(err => res.status(400).json({ message: err }));
 };
-
+const pageNotFound = (req, res) => {
+  res.status(404).send('404 - страница не найдена!');
+};
 
 module.exports = {
   signIn,
@@ -256,4 +258,5 @@ module.exports = {
   refreshPass,
   tokenForRefreshPass,
   emailVerify,
+  pageNotFound,
 };

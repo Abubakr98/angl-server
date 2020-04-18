@@ -30,11 +30,13 @@ const getAll = (req, res) => {
   Group.find()
     .exec()
     .then((group) => {
-      getAllHelper(group).then((data) => {
-        res.status(200).json(data);
-      }).catch((err) => {
-        console.log(err);
-      });
+      getAllHelper(group)
+        .then((data) => {
+          res.status(200).json(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     })
     .catch(err => res.status(500).json(err));
 };
@@ -58,7 +60,7 @@ const getById = (req, res) => {
 const updateOne = (req, res) => {
   delete req.body.id;
   delete req.body.__v;
-  Group.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
+  Group.findOneAndUpdate({ id: req.params.id }, req.body, { new: true })
     .exec()
     .then((group) => {
       res.status(201).json(group);
@@ -66,12 +68,17 @@ const updateOne = (req, res) => {
     .catch(err => res.status(500).json(err));
 };
 const removeOne = (req, res) => {
-  Group.findOneAndRemove({ _id: req.params.id })
+  Group.findOneAndRemove({ id: req.body.id })
     .exec()
     .then((group) => {
-      res.json(group);
+      Word.deleteMany({ group: group._id })
+        .exec()
+        .then((words) => {
+          res.status(200).json({ words, group });
+        })
+        .catch(err => res.status(500).json(err));
     })
-    .catch(err => res.status(200).status(500).json(err));
+    .catch(err => res.status(500).json(err));
 };
 const createOne = (req, res) => {
   const { _id } = req.body;
@@ -85,7 +92,8 @@ const createOne = (req, res) => {
       } else {
         res.status(401).json({ message: 'This group already exist!' });
       }
-    }).catch(err => res.status(500).json({ message: err.message }));
+    })
+    .catch(err => res.status(500).json({ message: err.message }));
 };
 
 module.exports = {

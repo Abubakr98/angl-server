@@ -7,3 +7,9 @@
 Робота почалась: Monday, February 17, 2020 Anno Domini, 11:00:00 PM
 Робота закінчалась: Monday, February 17, 2020 Anno Domini, 11:00:00 PM
 Користувачі на видалення, було знайденно: 0, було видаленно: 0, в Monday, February 17, 2020 Anno Domini, 11:00:00 PM
+Робота почалась: Sunday, April 12, 2020 Anno Domini, 11:00:00 PM
+Робота закінчалась: Sunday, April 12, 2020 Anno Domini, 11:00:00 PM
+Користувачі на видалення, було знайденно: 0, було видаленно: 0, в Sunday, April 12, 2020 Anno Domini, 11:00:00 PM
+Робота почалась: Wednesday, April 15, 2020 Anno Domini, 11:00:00 PM
+Робота закінчалась: Wednesday, April 15, 2020 Anno Domini, 11:00:00 PM
+Користувачі на видалення, було знайденно: 0, було видаленно: 0, в Wednesday, April 15, 2020 Anno Domini, 11:00:00 PM

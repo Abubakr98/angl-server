@@ -3,7 +3,7 @@ const auth = require('./auth');
 const user = require('./user');
 const words = require('./words');
 const groups = require('./groups');
-const { pageNotFound } = require('../../app/controllers/products');
+const { pageNotFound } = require('../../app/controllers/auth');
 
 const router = express.Router();
 // const authMiddleWare = require('../../middleware/auth');

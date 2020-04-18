@@ -4,7 +4,7 @@ const Word = mongoose.model('Word');
 
 const getAll = (req, res) => {
   // заменить название метода на products так как это не соответсвует REST
-  Word.find()
+  Word.find().sort({ field: 'asc', id: 1 })
     .exec()
     .then(Words => res.status(200).json(Words))
     .catch(err => res.status(500).json(err));
@@ -27,8 +27,8 @@ const updateOne = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
-const removeOne = (req, res) => {
-  Word.findOneAndRemove({ id: +req.params.id })
+const removeMany = (req, res) => {
+  Word.deleteMany({ id: { $in: req.body.ids } })
     .exec()
     .then((product) => {
       res.status(200).json(product);
@@ -43,7 +43,7 @@ const createOne = (req, res) => {
 
 module.exports = {
   createOne,
-  removeOne,
+  removeMany,
   updateOne,
   getByGroup,
   getAll,

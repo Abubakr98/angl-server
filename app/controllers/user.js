@@ -158,7 +158,7 @@ const addUserWord = (req, res) => {
               is_learned: true,
             });
             user.save((err) => {
-              if (err) return handleError(err);
+              if (err) return err;
             });
             res.json(user);
           } else {
