@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const path = require('path');
+const fse = require('fs-extra');
 
 const Word = mongoose.model('Word');
 
@@ -40,11 +42,33 @@ const createOne = (req, res) => {
     .then(createdWord => res.status(201).json(createdWord))
     .catch(err => res.status(500).json(err));
 };
-
+const uploadFile = (req, res) => {
+  const filedata = req.file;
+  console.log(req.params.id);
+  if (!filedata) {
+    res.send('Ошибка при загрузке файла');
+  } else {
+    res.send('Файл загружен');
+  }
+};
+const getUserWordImageUrl = (req, res) => {
+  const upload = path.join('public', 'wordImages');
+  fse.readdir(path.join(upload, req.params.id)).then((files) => {
+    const fileName = files.map((el, i) => {
+      if (el.indexOf('wordImage')) {
+        return el;
+      }
+    })[0];
+    const image = `wordImages/${req.params.id}/${fileName}`;
+    res.json({ wordId: req.params.id, image });
+  });
+};
 module.exports = {
   createOne,
   removeMany,
   updateOne,
   getByGroup,
   getAll,
+  uploadFile,
+  getUserWordImageUrl,
 };

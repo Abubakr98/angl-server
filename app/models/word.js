@@ -19,7 +19,12 @@ const WordSchema = new mongoose.Schema({
   },
   group: {
     type: String,
-    default: 'Інше',
+    default: 'other',
+    required: true,
+  },
+  examples: {
+    type: Array,
+    default: ['Інше', 'Інше'],
     required: true,
   },
 });

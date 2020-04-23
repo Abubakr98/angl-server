@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fse = require('fs-extra');
-const auth = require('../../app/controllers/user');
+const User = require('../../app/controllers/user');
 const authMiddleWare = require('../../middleware/auth');
 
 const storageConfig = multer.diskStorage({
@@ -15,15 +15,19 @@ const storageConfig = multer.diskStorage({
           cb(null, folder);
         });
       } else {
-        cb(null, folder);
+        fse.emptyDir(folder).then(() => {
+          cb(null, folder);
+        });
       }
     });
   },
   filename: (req, file, cb) => {
-    // const ext = file.originalname.split('.').pop();
-    cb(null, `${req.params.id}_avatar.png`); // тут костыль так как росширение задаеться примусово
+    const ext = file.originalname.split('.').pop();
+    cb(null, `${req.params.id}_avatar.${ext}`); // тут можно задавать росширение в ручную, пока все работает но если то задавать примусово.
   },
 });
+
+
 const fileFilter = (req, file, cb) => {
   if (
     file.mimetype === 'image/png'
@@ -38,53 +42,60 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storageConfig, fileFilter });
 const router = express.Router();
-router.route('/:id').get(
-  // authMiddleWare,
-  auth.getUser,
-);
+router
+  .route('/:id')
+  .get(
+    // authMiddleWare,
+    User.getUser,
+  )
+  .put(User.updateUser);
 
 router.get(
   '/:id/groups',
   // authMiddleWare,
-  auth.getUserGroups,
+  User.getUserGroups,
 );
-router.route('/:id/study/:group')
+router.route('/:id/study/:group').get(
+  // authMiddleWare,
+  User.learningWords,
+);
+router.route('/:id/study').post(
+  // authMiddleWare,
+  User.addUserWord,
+);
+router
+  .route('/:id/words')
   .get(
-  // authMiddleWare,
-    auth.learningWords,
-  );
-router.route('/:id/study')
-  .post(
-  // authMiddleWare,
-    auth.addUserWord,
-  );
-router.route('/:id/words')
-  .get(
-  // authMiddleWare,
-    auth.getUserWords,
-  );
+    // authMiddleWare,
+    User.getUserWords,
+  )
+  .delete(User.removeUserWord);
 router
   .route('/:id/avatar')
   .get(
     // authMiddleWare,
-    auth.downloadFile,
+    User.downloadFile,
   )
   .post(
     // authMiddleWare,
     upload.single('filedata'),
-    auth.uploadFile,
+    User.uploadFile,
   );
 router.get(
   '/:id/useravatar',
   // authMiddleWare,
-  auth.getUserAvatar,
+  User.getUserAvatar,
 );
 router.get(
   '/:id/useravatarurl',
   // authMiddleWare,
-  auth.getUserAvatarUrl,
+  User.getUserAvatarUrl,
 );
 
-router.get('/', authMiddleWare, auth.getAllUsers);
+router.get(
+  '/',
+  // authMiddleWare,
+  User.getAllUsers,
+);
 
 module.exports = router;

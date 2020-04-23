@@ -103,7 +103,10 @@ const getUserWords = (req, res) => {
       Word.find().then((words) => {
         const buff = [];
         user.words.map((el, i) => {
-          buff.push(words.find(word => word.id === el.id));
+          const currentWord = words.find(word => word.id === el.id);
+          if (currentWord) {
+            buff.push(words.find(word => word.id === el.id));
+          }
         });
         res.json(buff);
       });
@@ -168,7 +171,28 @@ const addUserWord = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
+const updateUser = (req, res) => {
+  const { firstName, lastName, email } = req.body;
+  User.findOneAndUpdate({ id: +req.params.id }, { firstName, lastName, email }, { new: true })
+    .exec()
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch(err => res.status(500).json(err));
+};
 
+const removeUserWord = (req, res) => {
+  User.findOne({ id: req.params.id })
+    .exec()
+    .then((user) => {
+      user.words.id(req.body._id).remove();
+      user.save((err) => {
+        if (err) return err;
+      });
+      res.json(user.words);
+    })
+    .catch(err => res.status(500).json(err));
+};
 
 module.exports = {
   getAllUsers,
@@ -181,4 +205,6 @@ module.exports = {
   getUserGroups,
   getUserWords,
   learningWords,
+  updateUser,
+  removeUserWord,
 };
