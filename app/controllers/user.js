@@ -113,6 +113,23 @@ const getUserWords = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
+
+const getUserWordImageUrl = (wordId) => {
+  const upload = path.join('public', 'wordImages');
+  if (fse.pathExistsSync(path.join(upload, `${wordId}`))) {
+    fse.readdir(path.join(upload, `${wordId}`)).then((files) => {
+      const fileName = files.map((el, i) => {
+        if (el.indexOf('wordImage')) {
+          return el;
+        }
+      })[0];
+      const image = `wordImages/${wordId}/${fileName}`;
+      return image;
+    });
+  } else {
+    return 'https://source.unsplash.com/random';
+  }
+};
 const learningWords = (req, res) => {
   const { limit } = req.query;
   const { id, group } = req.params;
@@ -128,11 +145,27 @@ const learningWords = (req, res) => {
               buff.push(el);
             }
           });
-          res.status(200).json(buff.slice(0, limit));
+          const LW = buff.slice(0, limit).map((el) => {
+            const {
+              en, ua, des, examples, group, id, _id,
+            } = el;
+            return {
+              en,
+              ua,
+              des,
+              examples,
+              group,
+              id,
+              _id,
+              image: getUserWordImageUrl(el._id),
+            };
+          });
+          res.status(200).json(LW);
         });
     })
     .catch(err => res.status(500).json(err));
 };
+
 const getAllUsers = (req, res) => {
   User.find()
     .exec()
@@ -173,14 +206,17 @@ const addUserWord = (req, res) => {
 };
 const updateUser = (req, res) => {
   const { firstName, lastName, email } = req.body;
-  User.findOneAndUpdate({ id: +req.params.id }, { firstName, lastName, email }, { new: true })
+  User.findOneAndUpdate(
+    { id: +req.params.id },
+    { firstName, lastName, email },
+    { new: true },
+  )
     .exec()
     .then((user) => {
       res.status(200).json(user);
     })
     .catch(err => res.status(500).json(err));
 };
-
 const removeUserWord = (req, res) => {
   User.findOne({ id: req.params.id })
     .exec()

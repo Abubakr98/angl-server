@@ -44,7 +44,6 @@ const createOne = (req, res) => {
 };
 const uploadFile = (req, res) => {
   const filedata = req.file;
-  console.log(req.params.id);
   if (!filedata) {
     res.send('Ошибка при загрузке файла');
   } else {
@@ -60,7 +59,7 @@ const getUserWordImageUrl = (req, res) => {
       }
     })[0];
     const image = `wordImages/${req.params.id}/${fileName}`;
-    res.json({ wordId: req.params.id, image });
+    res.json({ wordId: req.params.id, image });// image
   });
 };
 module.exports = {
