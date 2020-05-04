@@ -4,13 +4,38 @@ const fse = require('fs-extra');
 
 const Word = mongoose.model('Word');
 
+
+const wordImageUrl = (wordId) => {
+  const upload = path.join('public', 'wordImages');
+  if (fse.pathExistsSync(path.join(upload, `${wordId}`))) {
+    const files = fse.readdirSync(path.join(upload, `${wordId}`));
+    const fileName = files.map((el, i) => {
+      if (el.indexOf('wordImage')) {
+        return el;
+      }
+    })[0];
+    const image = `wordImages/${wordId}/${fileName}`;
+    return image;
+  }
+  return null;
+};
 const getAll = (req, res) => {
-  // заменить название метода на products так как это не соответсвует REST
   Word.find().sort({ field: 'asc', id: 1 })
     .exec()
-    .then(Words => res.status(200).json(Words))
+    .then((Words) => {
+      const W = Words.map((el, i) => {
+        const {
+          des, en, examples, group, id, ua, _id,
+        } = el;
+        return {
+          des, en, examples, group, id, ua, _id, image: wordImageUrl(el._id),
+        };
+      });
+      res.status(200).json(W);
+    })
     .catch(err => res.status(500).json(err));
 };
+
 const getByGroup = (req, res) => {
   Word.find({ group: req.params.group })
     .exec()

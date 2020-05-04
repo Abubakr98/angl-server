@@ -117,18 +117,16 @@ const getUserWords = (req, res) => {
 const getUserWordImageUrl = (wordId) => {
   const upload = path.join('public', 'wordImages');
   if (fse.pathExistsSync(path.join(upload, `${wordId}`))) {
-    fse.readdir(path.join(upload, `${wordId}`)).then((files) => {
-      const fileName = files.map((el, i) => {
-        if (el.indexOf('wordImage')) {
-          return el;
-        }
-      })[0];
-      const image = `wordImages/${wordId}/${fileName}`;
-      return image;
-    });
-  } else {
-    return 'https://source.unsplash.com/random';
+    const files = fse.readdirSync(path.join(upload, `${wordId}`));
+    const fileName = files.map((el, i) => {
+      if (el.indexOf('wordImage')) {
+        return el;
+      }
+    })[0];
+    const image = `wordImages/${wordId}/${fileName}`;
+    return image;
   }
+  return null;
 };
 const learningWords = (req, res) => {
   const { limit } = req.query;

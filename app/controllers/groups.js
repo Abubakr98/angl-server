@@ -1,5 +1,7 @@
 /* eslint-disable no-plusplus */
 const mongoose = require('mongoose');
+const path = require('path');
+const fse = require('fs-extra');
 
 const Group = mongoose.model('Group');
 const Word = mongoose.model('Word');
@@ -24,7 +26,6 @@ const getAllHelper = (group) => {
     });
   });
 };
-
 const getAll = (req, res) => {
   // заменить название метода на products так как это не соответсвует REST
   Group.find()
@@ -40,12 +41,34 @@ const getAll = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
+const groupImageUrl = (wordId) => {
+  const upload = path.join('public', 'groupImages');
+  if (fse.pathExistsSync(path.join(upload, `${wordId}`))) {
+    const files = fse.readdirSync(path.join(upload, `${wordId}`));
+    const fileName = files.map((el, i) => {
+      if (el.indexOf('groupImage')) {
+        return el;
+      }
+    })[0];
+    const image = `groupImages/${wordId}/${fileName}`;
+    return image;
+  }
+  return null;
+};
 const getAllJSon = (req, res) => {
   // заменить название метода на products так как это не соответсвует REST
   Group.find()
     .exec()
     .then((Groups) => {
-      res.status(200).json(Groups);
+      const G = Groups.map((el, i) => {
+        const {
+          des, name, id, _id,
+        } = el;
+        return {
+          des, name, id, _id, image: groupImageUrl(el._id),
+        };
+      });
+      res.status(200).json(G);
     })
     .catch(err => res.status(500).json(err));
 };
@@ -96,6 +119,14 @@ const createOne = (req, res) => {
     .catch(err => res.status(500).json({ message: err.message }));
 };
 
+const uploadFile = (req, res) => {
+  const filedata = req.file;
+  if (!filedata) {
+    res.send('Ошибка при загрузке файла');
+  } else {
+    res.send('Файл загружен');
+  }
+};
 module.exports = {
   createOne,
   removeOne,
@@ -103,4 +134,5 @@ module.exports = {
   getById,
   getAllJSon,
   getAll,
+  uploadFile,
 };
