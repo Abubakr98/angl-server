@@ -1,6 +1,8 @@
+/* eslint-disable no-param-reassign */
 const mongoose = require('mongoose');
 const path = require('path');
 const fse = require('fs-extra');
+const phasing = require('../helpers/phasing');
 
 const User = mongoose.model('User');
 const Word = mongoose.model('Word');
@@ -58,6 +60,11 @@ const getUser = (req, res) => {
   User.findOne({ id: req.params.id })
     .exec()
     .then((user) => {
+      // user.words = [];
+      // user.save((err) => {
+      //   if (err) return err;
+      // });
+
       res.json(user);
     })
     .catch(err => res.status(500).json(err));
@@ -139,8 +146,14 @@ const learningWords = (req, res) => {
         .then((user) => {
           const buff = [];
           words.map((el, i) => {
-            if (user.words.id(el._id) === null) {
+            if (user.words.id(el._id) === null) { // тут получается не совсем оптимизация так как добавляеться дофига слов а потом режиться только 5
               buff.push(el);
+            } else if (user.words.id(el._id).is_learned === false) {
+              const thisWord = user.words.id(el._id);
+              const rangeMs = Date.now() - thisWord.time;
+              if (phasing.stagesMs[thisWord.stage] <= rangeMs) {
+                buff.unshift(el);
+              }
             }
           });
           const LW = buff.slice(0, limit).map((el) => {
@@ -174,7 +187,7 @@ const getAllUsers = (req, res) => {
 };
 const addUserWord = (req, res) => {
   const wordId = req.body.id;
-
+  const wordTime = req.body.time;// ////////
   User.findOne({ id: req.params.id })
     .exec()
     .then((user) => {
@@ -182,21 +195,36 @@ const addUserWord = (req, res) => {
         .exec()
         .then((word) => {
           const { id, group, _id } = word;
-          const isWord = user.words.id(_id);
+          const thisWord = user.words.id(_id);
 
-          if (isWord === null) {
+          if (thisWord === null) {
             user.words.push({
               _id,
               id,
               group,
-              is_learned: true,
+              time: wordTime, // //////
+              is_learned: false,
             });
             user.save((err) => {
               if (err) return err;
             });
             res.json(user);
+          } else if (thisWord.is_learned === false || thisWord.stage < 5) {
+            const stageTime = phasing.stagesMs[thisWord.stage];
+            const thisWordTime = wordTime - thisWord.time;
+            if (stageTime <= thisWordTime) {
+              thisWord.stage += 1;
+              thisWord.time = wordTime;
+              if ((thisWord.stage) >= 5) thisWord.is_learned = true;
+              user.save((err) => {
+                if (err) return err;
+              });
+              res.json(user);
+            } else {
+              res.status(400).json({ message: 'Word are lerned!' });
+            }
           } else {
-            res.status(400).json({ message: 'Word already exist!' });
+            res.status(400).json({ message: 'The word is finally learned!' });
           }
         });
     })

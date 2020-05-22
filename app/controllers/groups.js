@@ -6,6 +6,20 @@ const fse = require('fs-extra');
 const Group = mongoose.model('Group');
 const Word = mongoose.model('Word');
 
+const groupImageUrl = (wordId) => {
+  const upload = path.join('public', 'groupImages');
+  if (fse.pathExistsSync(path.join(upload, `${wordId}`))) {
+    const files = fse.readdirSync(path.join(upload, `${wordId}`));
+    const fileName = files.map((el, i) => {
+      if (el.indexOf('groupImage')) {
+        return el;
+      }
+    })[0];
+    const image = `groupImages/${wordId}/${fileName}`;
+    return image;
+  }
+  return null;
+};
 const getAllHelper = (group) => {
   return new Promise((res) => {
     Word.find().then((words) => {
@@ -19,6 +33,7 @@ const getAllHelper = (group) => {
         });
         buff.push({
           ...el._doc,
+          image: groupImageUrl(el._id),
           words: count,
         });
       });
@@ -41,20 +56,7 @@ const getAll = (req, res) => {
     })
     .catch(err => res.status(500).json(err));
 };
-const groupImageUrl = (wordId) => {
-  const upload = path.join('public', 'groupImages');
-  if (fse.pathExistsSync(path.join(upload, `${wordId}`))) {
-    const files = fse.readdirSync(path.join(upload, `${wordId}`));
-    const fileName = files.map((el, i) => {
-      if (el.indexOf('groupImage')) {
-        return el;
-      }
-    })[0];
-    const image = `groupImages/${wordId}/${fileName}`;
-    return image;
-  }
-  return null;
-};
+
 const getAllJSon = (req, res) => {
   // заменить название метода на products так как это не соответсвует REST
   Group.find()

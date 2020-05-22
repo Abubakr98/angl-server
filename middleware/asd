@@ -1,0 +1,31 @@
+const mongoose = require('mongoose');
+const { ROLE } = require('../config/app');
+
+const User = mongoose.model('User');
+
+module.exports = (req, res, next) => {
+  const { userId } = req.body;
+  const authHeader = req.params.tokenPasswordReset || req.params.tokenEmailVerify || req.get('Authorization');
+  if (!authHeader) {
+    res.status(401).json({ message: 'Token not provided!' });
+    return;
+  }
+
+  const token = authHeader.replace('Bearer ', '');
+
+  if (!userId) {
+    res.status(401).json({ message: 'User id not provided!' });
+    return;
+  }
+  User.findOne({ id: userId }, (err, user) => {
+    if (!user) {
+      res.status(401).json({ message: 'User not exist!' });
+      return;
+    }
+    if (user.role !== ROLE.ADMIN) {
+      res.status(401).json({ message: 'Premission denied!' });
+      return;
+    }
+    next();
+  });
+};

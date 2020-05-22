@@ -50,6 +50,7 @@ const signIn = (req, res) => {
                 userEmail: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,
+                role: user.role,
               }));
           } else {
             res.status(401).json({ message: 'Invalid credentials!' });

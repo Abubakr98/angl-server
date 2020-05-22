@@ -4,6 +4,7 @@ const path = require('path');
 const fse = require('fs-extra');
 const groups = require('../../app/controllers/groups');
 // const authMiddleWare = require('../../middleware/auth');
+const accessAdminMiddleWare = require('../../middleware/isAdmin');
 
 const storageConfigWordImage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -44,15 +45,23 @@ router
   .route('/')
   .get(
     // authMiddleWare,
-    groups.getAllJSon, // getAll
+    groups.getAllJSon,
   )
   .post(
     // authMiddleWare,
+    accessAdminMiddleWare,
     groups.createOne,
   )
   .delete(
     // authMiddleWare,
+    accessAdminMiddleWare,
     groups.removeOne,
+  );
+router
+  .route('/count')
+  .get(
+    // authMiddleWare,
+    groups.getAll,
   );
 router
   .route('/:id')
@@ -62,6 +71,7 @@ router
   )
   .put(
     // authMiddleWare,
+    accessAdminMiddleWare,
     groups.updateOne,
   );
 
@@ -69,6 +79,7 @@ router
   .route('/:id/images')
   .post(
     // authMiddleWare,
+    accessAdminMiddleWare,
     uploadWordImage.single('filedata'),
     groups.uploadFile,
   );

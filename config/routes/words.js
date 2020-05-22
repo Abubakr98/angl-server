@@ -3,6 +3,8 @@ const multer = require('multer');
 const path = require('path');
 const fse = require('fs-extra');
 const words = require('../../app/controllers/words');
+const accessAdminMiddleWare = require('../../middleware/isAdmin');
+const authMiddleWare = require('../../middleware/auth');
 
 const storageConfigWordImage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -41,16 +43,15 @@ const uploadWordImage = multer({ storage: storageConfigWordImage, fileFilter });
 const router = express.Router();
 router
   .route('/')
-  .get(
-    // authMiddleWare,
-    words.getAll,
-  )
+  .get(authMiddleWare, accessAdminMiddleWare, words.getAll)
   .post(
     // authMiddleWare,
+    accessAdminMiddleWare,
     words.createOne,
   )
   .delete(
     // authMiddleWare,
+    accessAdminMiddleWare,
     words.removeMany,
   );
 router.route('/:group').get(
@@ -59,12 +60,14 @@ router.route('/:group').get(
 );
 router.route('/:id').put(
   // authMiddleWare,
+  accessAdminMiddleWare,
   words.updateOne,
 );
 router
   .route('/:id/images')
   .post(
     // authMiddleWare,
+    accessAdminMiddleWare,
     uploadWordImage.single('filedata'),
     words.uploadFile,
   )

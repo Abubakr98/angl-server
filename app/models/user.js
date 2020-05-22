@@ -4,6 +4,14 @@ const { MongooseAutoIncrementID } = require('mongoose-auto-increment-reworked');
 const userWordsSchema = new mongoose.Schema({
   id: Number,
   is_learned: Boolean,
+  stage: {
+    type: Number,
+    default: 0,
+  },
+  time: {
+    type: Number,
+    default: 0,
+  },
   group: String,
 });
 
@@ -33,6 +41,11 @@ const UserSchema = new mongoose.Schema({
   emailVerified: {
     type: Boolean,
     default: false,
+    required: true,
+  },
+  role: {
+    type: String,
+    default: 'basic',
     required: true,
   },
   words: [userWordsSchema],
