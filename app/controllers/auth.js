@@ -116,7 +116,7 @@ const sendEmailEmailVerify = (req, res, token) => {
 };
 const registration = (req, res) => {
   const {
-    firstName, lastName, email, password,
+    firstName, lastName, email, password, role,
   } = req.body;
   User.findOne({ email })
     .exec()
@@ -131,6 +131,7 @@ const registration = (req, res) => {
               email,
               password: hash.toString('hex'),
               tokenVerifyEmail: token,
+              role,
             })
               .then((createdUser) => {
                 sendEmailEmailVerify(req, res, token);
