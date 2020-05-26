@@ -3,12 +3,11 @@
     "subject": "Сообщение с LernWords на востановление пароля",
     "subjectVerifyEmail": "Сообщение с LernWords на подтверждение почты",
     "smtp": {
-      "host": "smtp.gmail.com",
+      "host": "smtp.ukr.net",
       "port": 465,
-      "secure": true,
       "auth": {
-        "user": "driednaturalfruits@gmail.com",
-        "pass": "aazim110611"
+        "user": "lern_words@ukr.net",
+        "pass": "Yplzcd0BCuxoJViR"
       }
     }
   }
