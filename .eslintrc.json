@@ -17,6 +17,8 @@
     "linebreak-style": "off",
     "arrow-body-style": "off",
     "no-underscore-dangle": "off",
+    "consistent-return": "off",
+    "array-callback-return": "off",
     "semi": [2, "always"]
   }
 }

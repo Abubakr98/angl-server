@@ -9,7 +9,7 @@ const wordImageUrl = (wordId) => {
   const upload = path.join('public', 'wordImages');
   if (fse.pathExistsSync(path.join(upload, `${wordId}`))) {
     const files = fse.readdirSync(path.join(upload, `${wordId}`));
-    const fileName = files.map((el, i) => {
+    const fileName = files.map((el) => {
       if (el.indexOf('wordImage')) {
         return el;
       }
@@ -23,7 +23,7 @@ const getAll = (req, res) => {
   Word.find().sort({ field: 'asc', id: 1 })
     .exec()
     .then((Words) => {
-      const W = Words.map((el, i) => {
+      const W = Words.map((el) => {
         const {
           des, en, examples, group, id, ua, _id,
         } = el;
@@ -78,7 +78,7 @@ const uploadFile = (req, res) => {
 const getUserWordImageUrl = (req, res) => {
   const upload = path.join('public', 'wordImages');
   fse.readdir(path.join(upload, req.params.id)).then((files) => {
-    const fileName = files.map((el, i) => {
+    const fileName = files.map((el) => {
       if (el.indexOf('wordImage')) {
         return el;
       }

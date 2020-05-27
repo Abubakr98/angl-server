@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fse = require('fs-extra');
 const User = require('../../app/controllers/user');
-const authMiddleWare = require('../../middleware/auth');
+// const authMiddleWare = require('../../middleware/auth');
 const accessAdminMiddleWare = require('../../middleware/isAdmin');
 
 const storageConfig = multer.diskStorage({

@@ -10,7 +10,7 @@ const groupImageUrl = (wordId) => {
   const upload = path.join('public', 'groupImages');
   if (fse.pathExistsSync(path.join(upload, `${wordId}`))) {
     const files = fse.readdirSync(path.join(upload, `${wordId}`));
-    const fileName = files.map((el, i) => {
+    const fileName = files.map((el) => {
       if (el.indexOf('groupImage')) {
         return el;
       }
@@ -49,9 +49,6 @@ const getAll = (req, res) => {
       getAllHelper(group)
         .then((data) => {
           res.status(200).json(data);
-        })
-        .catch((err) => {
-          console.log(err);
         });
     })
     .catch(err => res.status(500).json(err));
@@ -62,7 +59,7 @@ const getAllJSon = (req, res) => {
   Group.find()
     .exec()
     .then((Groups) => {
-      const G = Groups.map((el, i) => {
+      const G = Groups.map((el) => {
         const {
           des, name, id, _id,
         } = el;

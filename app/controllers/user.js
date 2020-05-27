@@ -9,7 +9,6 @@ const Word = mongoose.model('Word');
 
 const uploadFile = (req, res) => {
   const filedata = req.file;
-  console.log(req.params.id);
   if (!filedata) {
     res.send('Ошибка при загрузке файла');
   } else {
@@ -20,7 +19,7 @@ const uploadFile = (req, res) => {
 const downloadFile = (req, res) => {
   const upload = path.join('public', 'uploads');
   fse.readdir(path.join(upload, req.params.id)).then((files) => {
-    const fileName = files.map((el, i) => {
+    const fileName = files.map((el) => {
       if (el.indexOf('avatar')) {
         return el;
       }
@@ -33,7 +32,7 @@ const downloadFile = (req, res) => {
 const getUserAvatar = (req, res) => {
   const upload = path.join('public', 'uploads');
   fse.readdir(path.join(upload, req.params.id)).then((files) => {
-    const fileName = files.map((el, i) => {
+    const fileName = files.map((el) => {
       if (el.indexOf('avatar')) {
         return el;
       }
@@ -47,7 +46,7 @@ const getUserAvatar = (req, res) => {
 const getUserAvatarUrl = (req, res) => {
   const upload = path.join('public', 'uploads');
   fse.readdir(path.join(upload, req.params.id)).then((files) => {
-    const fileName = files.map((el, i) => {
+    const fileName = files.map((el) => {
       if (el.indexOf('avatar')) {
         return el;
       }
@@ -70,13 +69,13 @@ const getUser = (req, res) => {
     .catch(err => res.status(500).json(err));
 };
 const unique = (arr) => {
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     const groups = arr.map(el => el.group);
     res(Array.from(new Set(groups)));
   });
 };
 const wordsCountByGroup = (groups, words) => {
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     const arr = [];
     groups.map((g) => {
       let buff = 0;
@@ -109,7 +108,7 @@ const getUserWords = (req, res) => {
     .then((user) => {
       Word.find().then((words) => {
         const buff = [];
-        user.words.map((el, i) => {
+        user.words.map((el) => {
           const currentWord = words.find(word => word.id === el.id);
           if (currentWord) {
             buff.push(words.find(word => word.id === el.id));
@@ -125,7 +124,7 @@ const getUserWordImageUrl = (wordId) => {
   const upload = path.join('public', 'wordImages');
   if (fse.pathExistsSync(path.join(upload, `${wordId}`))) {
     const files = fse.readdirSync(path.join(upload, `${wordId}`));
-    const fileName = files.map((el, i) => {
+    const fileName = files.map((el) => {
       if (el.indexOf('wordImage')) {
         return el;
       }
@@ -145,8 +144,10 @@ const learningWords = (req, res) => {
         .exec()
         .then((user) => {
           const buff = [];
-          words.map((el, i) => {
-            if (user.words.id(el._id) === null) { // тут получается не совсем оптимизация так как добавляеться дофига слов а потом режиться только 5
+          words.map((el) => {
+            if (user.words.id(el._id) === null) {
+              // тут получается не совсем оптимизация
+              // так как добавляеться дофига слов а потом режиться только 5
               buff.push(el);
             } else if (user.words.id(el._id).is_learned === false) {
               const thisWord = user.words.id(el._id);

@@ -106,7 +106,7 @@ const sendEmailEmailVerify = (req, res, token) => {
       `,
   };
   // отправляем почту
-  transporter.sendMail(mailOptions, (error, info) => {
+  transporter.sendMail(mailOptions, (error) => {
     // если есть ошибки при отправке - сообщаем об этом
     if (error) {
       return res.status(500).json({ message: `При отправке письма произошла ошибка!: ${error}`, status: 'Error' });
@@ -197,7 +197,7 @@ const sendMail = (req, res, token) => {
       `,
   };
   // отправляем почту
-  transporter.sendMail(mailOptions, (error, info) => {
+  transporter.sendMail(mailOptions, (error) => {
     // если есть ошибки при отправке - сообщаем об этом
     if (error) {
       return res.status(500).json({ message: `При отправке письма произошла ошибка!: ${error}`, status: 'Error' });
