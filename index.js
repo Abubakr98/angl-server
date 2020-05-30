@@ -9,6 +9,7 @@ const swaggerDocument = require('./swagger.json');
 
 require('./app/models');
 require('./cron/revomeNotVerifiedUsers');
+require('./cron/dontSleep');
 const config = require('./config');
 
 const app = express();
