@@ -84,7 +84,7 @@ const sendEmailEmailVerify = (req, res, token) => {
   const { email } = req.body;
   const transporter = nodemailer.createTransport(config.mail.smtp);
   const mailOptions = {
-    from: config.mail.smtp.auth.user,
+    from: `<${config.mail.smtp.auth.user}>`,
     to: email,
     subject: config.mail.subjectVerifyEmail,
     html:
@@ -175,7 +175,7 @@ const sendMail = (req, res, token) => {
   const { email } = req.body;
   const transporter = nodemailer.createTransport(config.mail.smtp);
   const mailOptions = {
-    from: config.mail.smtp.auth.user,
+    from: `<${config.mail.smtp.auth.user}>`,
     to: email,
     subject: config.mail.subject,
     html:
